@@ -11,6 +11,7 @@ POP = 0b01000110
 ADD = 0b10100000
 CALL = 0b01010000
 RET = 0b00010001
+CMP = 0b10100111
 
 
 class CPU:
@@ -19,6 +20,7 @@ class CPU:
     def __init__(self):
         """Construct a new CPU."""
         self.pc = 0
+        self.flag = 0x00000000
         self.ram = [None] * 256
         self.reg = [None] * 8
         self.reg[7] = 0xF4
@@ -54,6 +56,13 @@ class CPU:
             self.reg[reg_a] += self.reg[reg_b]
         elif op == MUL:
             self.reg[reg_a] *= self.reg[reg_b]
+        elif op == CMP:
+            if self.reg[reg_a] > self.reg[reg_b]:
+                self.flag = 0b100
+            elif self.reg[reg_a] == self.reg[reg_b]:
+                self.flag = 0b001
+            elif self.reg[reg_a] < self.reg[reg_b]:
+                self.flag = 0b010
         # elif op == "SUB": etc
         else:
             raise Exception("Unsupported ALU operation")
