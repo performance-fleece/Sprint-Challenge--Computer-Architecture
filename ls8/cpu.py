@@ -15,6 +15,13 @@ CMP = 0b10100111
 JEQ = 0b01010101
 JNE = 0b01010110
 JMP = 0b01010100
+AND = 0b10100000
+OR = 0b10101010
+XOR = 0b10101011
+NOT = 0b01101001
+SHL = 0b10101100
+SHR = 0b10101101
+MOD = 0b10100100
 
 
 class CPU:
@@ -71,6 +78,20 @@ class CPU:
                 self.flag = 0b100
             else:
                 print(f"flag not set {self.flag}")
+        elif op == AND:
+            self.reg[reg_a] &= self.reg[reg_b]
+        elif op == OR:
+            self.reg[reg_a] |= self.reg[reg_b]
+        elif op == XOR:
+            self.reg[reg_a] ^= self.reg[reg_b]
+        elif op == NOT:
+            self.reg[reg_a] = ~self.reg[reg_a]
+        elif op == SHL:
+            pass
+        elif op == SHR:
+            pass
+        elif op == MOD:
+            self.reg[reg_a] /= self.reg[reg_b]
         # elif op == "SUB": etc
         else:
             raise Exception("Unsupported ALU operation")
