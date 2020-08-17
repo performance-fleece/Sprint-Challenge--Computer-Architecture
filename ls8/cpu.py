@@ -12,6 +12,9 @@ ADD = 0b10100000
 CALL = 0b01010000
 RET = 0b00010001
 CMP = 0b10100111
+JEQ = 0b01010101
+JNE = 0b01010110
+JMP = 0b01010100
 
 
 class CPU:
@@ -33,6 +36,9 @@ class CPU:
         self.branchtable[POP] = self.handle_pop
         self.branchtable[CALL] = self.handle_call
         self.branchtable[RET] = self.handle_ret
+        self.branchtable[JEQ] = self.handle_jeq
+        self.branchtable[JNE] = self.handle_jne
+        self.branchtable[JMP] = self.handle_jmp
 
     def load(self):
         """Load a program into memory."""
@@ -58,11 +64,13 @@ class CPU:
             self.reg[reg_a] *= self.reg[reg_b]
         elif op == CMP:
             if self.reg[reg_a] > self.reg[reg_b]:
-                self.flag = 0b100
+                self.flag = 0b010
             elif self.reg[reg_a] == self.reg[reg_b]:
                 self.flag = 0b001
             elif self.reg[reg_a] < self.reg[reg_b]:
-                self.flag = 0b010
+                self.flag = 0b100
+            else:
+                print(f"flag not set {self.flag}")
         # elif op == "SUB": etc
         else:
             raise Exception("Unsupported ALU operation")
@@ -134,6 +142,19 @@ class CPU:
         self.pc = ret_idx
 
         self.reg[7] += 1
+
+    def handle_jeq(self, reg_idx, __):
+        if self.flag & 0b001 == 1:
+            new_pc = self.reg[reg_idx]
+            self.pc = new_pc
+
+    def handle_jne(self, reg_idx, _):
+        if self.flag & 0b001 == 0:
+            new_pc = self.reg[reg_idx]
+            self.pc = new_pc
+
+    def handle_jmp(self, op_a, _):
+        pass
 
     def run(self):
         """Run the CPU."""
