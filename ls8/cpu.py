@@ -147,14 +147,19 @@ class CPU:
         if self.flag & 0b001 == 1:
             new_pc = self.reg[reg_idx]
             self.pc = new_pc
+        else:
+            self.pc += 2
 
     def handle_jne(self, reg_idx, _):
         if self.flag & 0b001 == 0:
             new_pc = self.reg[reg_idx]
             self.pc = new_pc
+        else:
+            self.pc += 2
 
-    def handle_jmp(self, op_a, _):
-        pass
+    def handle_jmp(self, reg_idx, _):
+        new_pc = self.reg[reg_idx]
+        self.pc = new_pc
 
     def run(self):
         """Run the CPU."""
